@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beri penilaian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f3f4;--card:#fff;--ink:#202124;--sub:#5f6368;--line:#dadce0;--star:#fbbc04;--off:#dadce0;--blue:#1a73e8;--blue-h:#1765cc;--wa:#188038;--on-btn:#fff;--sh:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171717;--card:#292a2d;--ink:#e8eaed;--sub:#9aa0a6;--line:#3c4043;--off:#5f6368;--blue:#8ab4f8;--blue-h:#aecbfa;--wa:#81c995;--on-btn:#202124;--sh:0 1px 3px rgba(0,0,0,.6)}}
+:root[data-theme="dark"]{--bg:#171717;--card:#292a2d;--ink:#e8eaed;--sub:#9aa0a6;--line:#3c4043;--off:#5f6368;--blue:#8ab4f8;--blue-h:#aecbfa;--wa:#81c995;--on-btn:#202124;--sh:0 1px 3px rgba(0,0,0,.6)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Roboto,"Segoe UI",Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+main{width:100%;max-width:400px;background:var(--card);border-radius:12px;box-shadow:var(--sh);padding:24px;animation:masuk .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes masuk{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.place{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.pin{flex:none;width:40px;height:40px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.pin svg{width:22px;height:22px;fill:#ea4335}
+.place b{display:block;font-size:1rem;font-weight:500;line-height:1.3}
+.place span{font-size:.8rem;color:var(--sub)}
+h1{font-size:1.375rem;font-weight:400;line-height:1.3;margin:0 0 4px}
+#sub{font-size:.875rem;color:var(--sub);margin:0 0 14px;line-height:1.5;transition:opacity .2s}
+.stars{display:flex;gap:0;margin:0 -6px}
+.stars button{background:none;border:0;padding:3px 6px;cursor:pointer;line-height:0;touch-action:manipulation}
+.stars svg{width:44px;height:44px;fill:var(--off);transition:fill .18s,transform .18s cubic-bezier(.3,1.6,.5,1)}
+.stars button.hv svg{fill:var(--star);opacity:.55}
+.stars button.on svg{fill:var(--star);opacity:1;animation:pop .38s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i)*55ms)}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.lbl{height:22px;margin:6px 0 0;font-size:.9rem;font-weight:500;color:var(--ink);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
+.lbl.s{opacity:1;transform:none}
+.panel{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1),opacity .35s .05s}
+.panel.open{grid-template-rows:1fr;opacity:1}
+.panel>div{overflow:hidden;min-height:0}
+.inner{margin-top:16px;padding-top:6px;border-top:1px solid var(--line)}
+.btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 16px;border-radius:20px;font-size:.9rem;font-weight:500;text-decoration:none;margin-top:10px;border:1px solid transparent;letter-spacing:.2px;transition:background .2s,box-shadow .2s,transform .12s}
+.btn:active{transform:scale(.98)}
+.g{background:var(--blue);color:var(--on-btn)}
+.g:hover{background:var(--blue-h);box-shadow:var(--sh)}
+.w{background:var(--wa);color:var(--on-btn)}
+.w:hover{box-shadow:var(--sh)}
+.o{background:transparent;color:var(--blue);border-color:var(--line)}
+.o:hover{background:rgba(26,115,232,.08)}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.25;transform:scale(0);animation:rip .55s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.spin{width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:putar .7s linear infinite}
+@keyframes putar{to{transform:rotate(360deg)}}
+button:focus-visible,.btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.tl{display:block;text-align:center;margin-top:14px;font-size:.8rem;color:var(--sub);text-decoration:underline;text-underline-offset:3px}
+.foot{margin:18px 0 0;font-size:.72rem;color:var(--sub);text-align:center}
+.err{color:#d93025}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="place">
+    <div class="pin"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></div>
+    <div><b id="nama">Toko</b><span>Penilaian pelanggan</span></div>
+  </div>
+  <h1>Bagaimana pengalaman Anda?</h1>
+  <p id="sub">Pilih bintang untuk memberi penilaian.</p>
+  <div class="stars" id="stars" role="radiogroup" aria-label="Penilaian bintang"></div>
+  <div class="lbl" id="lbl" aria-live="polite"></div>
+  <div class="panel" id="panel"><div><div class="inner" id="hasil"></div></div></div>
+  <div class="foot" id="foot"></div>
+</main>
+<script>
+/* Alamat: https://DOMAINANDA/?p=PLACE_ID&wa=628123456789&n=Nama%20Toko */
+var q = new URLSearchParams(location.search);
+var PLACE = q.get("p") || "";
+var WA = (q.get("wa") || "6285378595663").replace(/\D/g, "");
+var NAMA = q.get("n") || "TOKO ARSYA ARSY";
+var GOOGLE = PLACE ? "https://search.google.com/local/writereview?placeid=" + encodeURIComponent(PLACE)
+                   : "https://g.page/r/CT5IJpU9C7wdEBM/review";
+var LABEL = ["", "Sangat buruk", "Kurang baik", "Cukup", "Baik", "Luar biasa"];
+document.getElementById("nama").textContent = NAMA;
+document.getElementById("foot").textContent = "Halaman penilaian milik " + NAMA;
+document.title = "Nilai " + NAMA;
+var kurang = [];
+if (!WA) kurang.push("wa (nomor WhatsApp)");
+if (kurang.length) document.getElementById("sub").innerHTML = '<span class="err">Link belum lengkap, isi: ' + kurang.join(" dan ") + '</span>';
+
+var STAR = '<svg viewBox="0 0 24 24"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+var box = document.getElementById("stars"), panel = document.getElementById("panel"),
+    hasil = document.getElementById("hasil"), lbl = document.getElementById("lbl"),
+    sub = document.getElementById("sub"), dipilih = 0, auto;
+
+for (var i = 1; i <= 5; i++) (function (n) {
+  var b = document.createElement("button");
+  b.type = "button"; b.innerHTML = STAR;
+  b.setAttribute("role", "radio"); b.setAttribute("aria-label", n + " bintang");
+  b.onclick = function () { pilih(n); };
+  b.onmouseenter = function () { sorot(n); };
+  box.appendChild(b);
+})(i);
+box.onmouseleave = function () { sorot(0); };
+
+function sorot(n) {
+  var bs = box.children;
+  for (var i = 0; i < bs.length; i++) bs[i].classList.toggle("hv", n > 0 && i < n && i >= dipilih);
+  if (n) { lbl.textContent = LABEL[n]; lbl.classList.add("s"); }
+  else if (dipilih) { lbl.textContent = LABEL[dipilih]; }
+  else lbl.classList.remove("s");
+}
+
+function ripple(e) {
+  var a = e.currentTarget, r = a.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2;
+  var s = document.createElement("span"); s.className = "rip";
+  s.style.cssText = "width:" + d + "px;height:" + d + "px;left:" + (e.clientX - r.left - d / 2) + "px;top:" + (e.clientY - r.top - d / 2) + "px";
+  a.appendChild(s); setTimeout(function () { s.remove(); }, 600);
+}
+
+function pilih(n) {
+  dipilih = n;
+  var bs = box.children;
+  for (var i = 0; i < bs.length; i++) {
+    bs[i].classList.remove("hv", "on");
+    bs[i].style.setProperty("--i", i);
+  }
+  void box.offsetWidth;
+  for (var j = 0; j < n; j++) bs[j].classList.add("on");
+  lbl.textContent = LABEL[n]; lbl.classList.add("s");
+
+  var waLink = "https://wa.me/" + WA + "?text=" + encodeURIComponent("Halo " + NAMA + ", saya memberi " + n + " bintang. Masukan saya: ");
+  var h = "", teks;
+  if (n >= 4) {
+    teks = "Terima kasih! Kami arahkan Anda ke Google untuk menulis ulasan.";
+    h += '<a class="btn g" href="' + GOOGLE + '">Lanjut ke Google</a>';
+    if (WA) h += '<a class="tl" href="' + waLink + '">Kirim masukan ke pemilik lewat WhatsApp</a>';
+  } else {
+    teks = "Maaf pengalamannya kurang baik. Ceritakan langsung ke pemilik agar segera diperbaiki.";
+    if (WA) h += '<a class="btn g" href="' + waLink + '">Kirim</a>';
+    else h += '<p class="err" style="margin:12px 0 0">Tombol Kirim belum aktif: alamat halaman ini belum memuat nomor WhatsApp (&amp;wa=628xxxx).</p>';
+    h += '<a class="tl" href="' + GOOGLE + '">Tetap ingin menulis ulasan di Google</a>';
+  }
+  sub.style.opacity = 0;
+  setTimeout(function () { sub.textContent = teks; sub.style.opacity = 1; }, 180);
+  hasil.innerHTML = h;
+  var links = hasil.querySelectorAll("a.btn");
+  for (var k = 0; k < links.length; k++) links[k].addEventListener("click", function (e) {
+    ripple(e);
+    var a = e.currentTarget, href = a.href;
+    e.preventDefault();
+    a.insertAdjacentHTML("afterbegin", '<span class="spin"></span>');
+    setTimeout(function () { location.href = href; }, 320);
+  });
+  panel.classList.add("open");
+  clearTimeout(auto);
+  if (n >= 4) auto = setTimeout(function () {
+    var a = hasil.querySelector(".g");
+    if (a) a.click();
+  }, 1600);
+}
+</script>
+</body>
+</html>
